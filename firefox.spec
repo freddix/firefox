@@ -2,22 +2,22 @@
 
 Summary:	Web browser
 Name:		firefox
-Version:	15.0.1
-Release:	2
+Version:	16.0.1
+Release:	0.1
 License:	MPL v1.1 or GPL v2+ or LGPL v2.1+
 Group:		X11/Applications
 Source0:	http://releases.mozilla.org/pub/mozilla.org/%{name}/releases/%{version}/source/%{name}-%{version}.source.tar.bz2
-# Source0-md5:	743ba71fbce7b32023405db02d44143f
+# Source0-md5:	78e641c67dc4a40cb3f48fce3e782d41
 Source1:	http://releases.mozilla.org/pub/mozilla.org/%{name}/releases/%{version}/linux-i686/xpi/de.xpi
-# Source1-md5:	6840d0d5b8df75741d4b44fbdd67ba8e
+# Source1-md5:	438bbcf674a8de349321a1b9a7c03a76
 Source2:	http://releases.mozilla.org/pub/mozilla.org/%{name}/releases/%{version}/linux-i686/xpi/pl.xpi
-# Source2-md5:	c52a362ba09e6c17f0e8e608baa9824e
+# Source2-md5:	b166a99db89e9b4a048a91cb92e5028c
 Source100:	vendor.js
-Patch0:		%{name}-config.patch
+Patch0:		%{name}-install-dir.patch
 Patch1:		%{name}-pc.patch
 Patch2:		%{name}-hunspell.patch
 Patch3:		%{name}-system-cairo.patch
-Patch4:		%{name}-packaging.patch
+Patch4:		%{name}-virtualenv.patch
 URL:		http://www.mozilla.org/projects/firefox/
 BuildRequires:	OpenGL-devel
 BuildRequires:	automake
@@ -60,6 +60,8 @@ Web browser.
 %setup -qc
 
 cd mozilla-release
+%patch0 -p1
+
 %if !%{with xulrunner}
 %patch1 -p1
 %patch2 -p1
@@ -69,10 +71,9 @@ cd mozilla-release
 rm -f extensions/spellcheck/hunspell/src/*.hxx
 
 echo 'LOCAL_INCLUDES += $(MOZ_HUNSPELL_CFLAGS)' >> extensions/spellcheck/src/Makefile.in
-%else
-%patch0 -p1
-%patch4 -p2
 %endif
+
+%patch4 -p1
 
 %build
 cd mozilla-release
@@ -163,6 +164,7 @@ cd mozilla-release
 
 %{__make} -j1 -f client.mk install	\
 	DESTDIR=$RPM_BUILD_ROOT		\
+	MOZ_PKG_FATAL_WARNINGS=0	\
 	STRIP="/bin/true"
 
 cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_libdir}/%{name}/extensions/langpack-de@firefox.mozilla.org.xpi
@@ -212,11 +214,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 %update_icon_cache hicolor
-%update_desktop_database_post
+%update_desktop_database
 
 %postun
 %update_icon_cache hicolor
-%update_desktop_database_postun
+%update_desktop_database
 
 %files
 %defattr(644,root,root,755)
@@ -238,6 +240,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/%{name}/libxul.so
 %attr(755,root,root) %{_libdir}/%{name}/mozilla-xremote-client
 %attr(755,root,root) %{_libdir}/%{name}/plugin-container
+
 %{_libdir}/%{name}/platform.ini
 %{_libdir}/%{name}/dependentlibs.list
 %else
@@ -256,6 +259,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/icons
 %{_libdir}/%{name}/omni.ja
 %{_libdir}/%{name}/searchplugins
+
+%dir %{_libdir}/%{name}/webapprt
+%dir %{_libdir}/%{name}/webapprt/components
+%{_libdir}/%{name}/webapprt/omni.ja
+%{_libdir}/%{name}/webapprt/webapprt.ini
+%attr(755,root,root) %{_libdir}/%{name}/webapprt-stub
 
 %lang(de) %{_libdir}/%{name}/extensions/langpack-de@firefox.mozilla.org.xpi
 %lang(pl) %{_libdir}/%{name}/extensions/langpack-pl@firefox.mozilla.org.xpi
