@@ -2,16 +2,16 @@
 
 Summary:	Web browser
 Name:		firefox
-Version:	16.0.1
-Release:	0.1
+Version:	16.0.2
+Release:	1
 License:	MPL v1.1 or GPL v2+ or LGPL v2.1+
 Group:		X11/Applications
 Source0:	http://releases.mozilla.org/pub/mozilla.org/%{name}/releases/%{version}/source/%{name}-%{version}.source.tar.bz2
-# Source0-md5:	78e641c67dc4a40cb3f48fce3e782d41
+# Source0-md5:	1b360968ab05b2a59757d33514897915
 Source1:	http://releases.mozilla.org/pub/mozilla.org/%{name}/releases/%{version}/linux-i686/xpi/de.xpi
-# Source1-md5:	438bbcf674a8de349321a1b9a7c03a76
+# Source1-md5:	d35d51b097192060b45e0cddd235c560
 Source2:	http://releases.mozilla.org/pub/mozilla.org/%{name}/releases/%{version}/linux-i686/xpi/pl.xpi
-# Source2-md5:	b166a99db89e9b4a048a91cb92e5028c
+# Source2-md5:	3b4182f7483b7a279fb74084b7d40ebf
 Source100:	vendor.js
 Patch0:		%{name}-install-dir.patch
 Patch1:		%{name}-pc.patch
