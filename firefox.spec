@@ -2,16 +2,16 @@
 
 Summary:	Web browser
 Name:		firefox
-Version:	16.0.2
-Release:	1
+Version:	17.0
+Release:	2
 License:	MPL v1.1 or GPL v2+ or LGPL v2.1+
 Group:		X11/Applications
 Source0:	http://releases.mozilla.org/pub/mozilla.org/%{name}/releases/%{version}/source/%{name}-%{version}.source.tar.bz2
-# Source0-md5:	1b360968ab05b2a59757d33514897915
+# Source0-md5:	3d9d2f6420344ff47a8af3a35ac4bdd6
 Source1:	http://releases.mozilla.org/pub/mozilla.org/%{name}/releases/%{version}/linux-i686/xpi/de.xpi
-# Source1-md5:	d35d51b097192060b45e0cddd235c560
+# Source1-md5:	f1b4f41a7e2c0018dfbaa5584dcfe311
 Source2:	http://releases.mozilla.org/pub/mozilla.org/%{name}/releases/%{version}/linux-i686/xpi/pl.xpi
-# Source2-md5:	3b4182f7483b7a279fb74084b7d40ebf
+# Source2-md5:	7ea26b6cd44bdf4988bd3815630c8b12
 Source100:	vendor.js
 Patch0:		%{name}-install-dir.patch
 Patch1:		%{name}-pc.patch
@@ -48,9 +48,15 @@ BuildRequires:	zlib-devel
 %if %{with xulrunner}
 BuildRequires:  xulrunner-devel >= %{version}
 %endif
-Requires(post,postun):	desktop-file-utils
 Requires(post,postun):	/usr/bin/gtk-update-icon-cache
+Requires(post,postun):	desktop-file-utils
 Requires(post,postun):	hicolor-icon-theme
+# for audio and video playback
+Suggests:	gstreamer010-ffmpeg
+Suggests:	gstreamer010-plugins-bad
+Suggests:	gstreamer010-plugins-base
+Suggests:	gstreamer010-plugins-good
+Suggests:	gstreamer010-plugins-ugly
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -110,6 +116,7 @@ ac_add_options --enable-optimize
 ac_add_options --disable-gnomeui
 ac_add_options --disable-gnomevfs
 ac_add_options --enable-gio
+ac_add_options --enable-gstreamer
 ac_add_options --enable-startup-notification
 #
 ac_add_options --enable-system-cairo
