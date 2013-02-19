@@ -2,16 +2,16 @@
 
 Summary:	Web browser
 Name:		firefox
-Version:	18.0.1
-Release:	2
+Version:	19.0
+Release:	1
 License:	MPL v1.1 or GPL v2+ or LGPL v2.1+
 Group:		X11/Applications
 Source0:	http://releases.mozilla.org/pub/mozilla.org/%{name}/releases/%{version}/source/%{name}-%{version}.source.tar.bz2
-# Source0-md5:	8b400555fc7063163e3b99472d0c92a1
+# Source0-md5:	3dc732b6ce177792b43324f4bc7164d8
 Source1:	http://releases.mozilla.org/pub/mozilla.org/%{name}/releases/%{version}/linux-i686/xpi/de.xpi
-# Source1-md5:	079208efca9b359d77eeeff25a1a310f
+# Source1-md5:	813a156d3660e4a5fd526ffb6209cf19
 Source2:	http://releases.mozilla.org/pub/mozilla.org/%{name}/releases/%{version}/linux-i686/xpi/pl.xpi
-# Source2-md5:	761ebc3bf57ec1b66988794cada89606
+# Source2-md5:	d83fd773e828b35ed89e8d0732f16b1f
 Source100:	vendor.js
 Patch0:		%{name}-install-dir.patch
 Patch1:		%{name}-pc.patch
