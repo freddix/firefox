@@ -2,16 +2,16 @@
 
 Summary:	Web browser
 Name:		firefox
-Version:	19.0
+Version:	20.0.1
 Release:	1
 License:	MPL v1.1 or GPL v2+ or LGPL v2.1+
 Group:		X11/Applications
 Source0:	http://releases.mozilla.org/pub/mozilla.org/%{name}/releases/%{version}/source/%{name}-%{version}.source.tar.bz2
-# Source0-md5:	3dc732b6ce177792b43324f4bc7164d8
+# Source0-md5:	b822ff4b2348410587dec563235d9320
 Source1:	http://releases.mozilla.org/pub/mozilla.org/%{name}/releases/%{version}/linux-i686/xpi/de.xpi
-# Source1-md5:	813a156d3660e4a5fd526ffb6209cf19
+# Source1-md5:	d9e685e55d32caf84f419f72a1c468ec
 Source2:	http://releases.mozilla.org/pub/mozilla.org/%{name}/releases/%{version}/linux-i686/xpi/pl.xpi
-# Source2-md5:	d83fd773e828b35ed89e8d0732f16b1f
+# Source2-md5:	959e327c760433883fa99391983c1d92
 Source100:	vendor.js
 Patch0:		%{name}-install-dir.patch
 Patch1:		%{name}-pc.patch
@@ -33,13 +33,13 @@ BuildRequires:	libnotify-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libvpx-devel
-BuildRequires:	nspr-devel >= 1:4.9
-BuildRequires:	nss-devel >= 1:3.13.3
+BuildRequires:	nspr-devel >= 1:4.9.4
+BuildRequires:	nss-devel >= 1:3.13.4
 BuildRequires:	pango-devel
 BuildRequires:	perl-modules
 BuildRequires:	pkg-config
 BuildRequires:	sed
-BuildRequires:	sqlite3-devel >= 3.7.10
+BuildRequires:	sqlite3-devel >= 3.7.15.2
 BuildRequires:	startup-notification-devel
 BuildRequires:	xorg-libXcursor-devel
 BuildRequires:	xorg-libXft-devel
