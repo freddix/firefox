@@ -1,19 +1,18 @@
 Summary:	Web browser
 Name:		firefox
-Version:	21.0
-Release:	2
+Version:	22.0
+Release:	1
 License:	MPL v1.1 or GPL v2+ or LGPL v2.1+
 Group:		X11/Applications
 Source0:	http://releases.mozilla.org/pub/mozilla.org/%{name}/releases/%{version}/source/%{name}-%{version}.source.tar.bz2
-# Source0-md5:	6e2510e9466b280c367de0e4c05a8840
+# Source0-md5:	4ffb6d1c1a04ca8e3dbca23df09626dd
 Source1:	http://releases.mozilla.org/pub/mozilla.org/%{name}/releases/%{version}/linux-i686/xpi/de.xpi
-# Source1-md5:	c875bf6bef07e7df75707010089bc2fc
+# Source1-md5:	b6995e9f3ba3d9514371d0adf3f4b0fa
 Source2:	http://releases.mozilla.org/pub/mozilla.org/%{name}/releases/%{version}/linux-i686/xpi/pl.xpi
-# Source2-md5:	df26dd893440c27f2f86dce5ac4ea0a3
+# Source2-md5:	e0b370ae9e5642d03dd77cc07fbf4567
 Source100:	vendor.js
 Patch0:		%{name}-install-dir.patch
 Patch1:		%{name}-virtualenv.patch
-Patch2:		bug872439.patch
 URL:		http://www.mozilla.org/projects/firefox/
 BuildRequires:	OpenGL-devel
 BuildRequires:	automake
@@ -62,7 +61,6 @@ Web browser.
 cd mozilla-release
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
 
 %build
 cd mozilla-release
