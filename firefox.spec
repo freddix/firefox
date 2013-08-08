@@ -1,15 +1,15 @@
 Summary:	Web browser
 Name:		firefox
-Version:	22.0
+Version:	23.0
 Release:	1
 License:	MPL v1.1 or GPL v2+ or LGPL v2.1+
 Group:		X11/Applications
 Source0:	http://releases.mozilla.org/pub/mozilla.org/%{name}/releases/%{version}/source/%{name}-%{version}.source.tar.bz2
-# Source0-md5:	4ffb6d1c1a04ca8e3dbca23df09626dd
+# Source0-md5:	794e0139c4df0392146353c655d94bb9
 Source1:	http://releases.mozilla.org/pub/mozilla.org/%{name}/releases/%{version}/linux-i686/xpi/de.xpi
-# Source1-md5:	b6995e9f3ba3d9514371d0adf3f4b0fa
+# Source1-md5:	8e1f803cffb36eaf8736ccaa27eacb22
 Source2:	http://releases.mozilla.org/pub/mozilla.org/%{name}/releases/%{version}/linux-i686/xpi/pl.xpi
-# Source2-md5:	e0b370ae9e5642d03dd77cc07fbf4567
+# Source2-md5:	97bc4932eac02e0e6d8d4263682d3a1d
 Source100:	vendor.js
 Patch0:		%{name}-install-dir.patch
 Patch1:		%{name}-virtualenv.patch
@@ -17,7 +17,7 @@ URL:		http://www.mozilla.org/projects/firefox/
 BuildRequires:	OpenGL-devel
 BuildRequires:	automake
 BuildRequires:	bzip2-devel
-BuildRequires:	cairo-devel >= 1.10.2-2
+BuildRequires:	cairo-devel
 BuildRequires:	gtk+-devel
 BuildRequires:	hunspell-devel
 BuildRequires:	libIDL-devel
@@ -28,8 +28,8 @@ BuildRequires:	libnotify-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libvpx-devel
-BuildRequires:	nspr-devel >= 1:4.9.4
-BuildRequires:	nss-devel >= 1:3.13.4
+BuildRequires:	nspr-devel >= 1:4.10
+BuildRequires:	nss-devel >= 1:3.15.1
 BuildRequires:	pango-devel
 BuildRequires:	perl-modules
 BuildRequires:	pkg-config
