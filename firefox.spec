@@ -1,15 +1,15 @@
 Summary:	Web browser
 Name:		firefox
-Version:	23.0.1
+Version:	24.0
 Release:	1
 License:	MPL v1.1 or GPL v2+ or LGPL v2.1+
 Group:		X11/Applications
 Source0:	ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/source/firefox-%{version}.source.tar.bz2
-# Source0-md5:	0fa25582fb5e0fba37c9f1add8370af2
+# Source0-md5:	06a4c0fe8d3a979aea2fce8d0fdbf328
 Source1:	http://releases.mozilla.org/pub/mozilla.org/%{name}/releases/%{version}/linux-i686/xpi/de.xpi
-# Source1-md5:	898bfa8ac55e2b079b4ff9fdc1463547
+# Source1-md5:	7925de3b7c817c39a7b8f7f82109f671
 Source2:	http://releases.mozilla.org/pub/mozilla.org/%{name}/releases/%{version}/linux-i686/xpi/pl.xpi
-# Source2-md5:	9a1275bded5d05cdb96ed9509604f843
+# Source2-md5:	9090a571f8f9f37c0539395ed185b178
 Source100:	vendor.js
 Patch0:		%{name}-install-dir.patch
 Patch1:		%{name}-virtualenv.patch
