@@ -1,15 +1,15 @@
 Summary:	Web browser
 Name:		firefox
-Version:	25.0.1
-Release:	1
+Version:	26.0
+Release:	2
 License:	MPL v1.1 or GPL v2+ or LGPL v2.1+
 Group:		X11/Applications
 Source0:	ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/source/firefox-%{version}.source.tar.bz2
-# Source0-md5:	b5b57d3ea937a339e0ed7ebea604b430
-Source1:	http://releases.mozilla.org/pub/mozilla.org/%{name}/releases/%{version}/linux-i686/xpi/de.xpi
-# Source1-md5:	23c893eb92d2fa8992ef79e00884b656
-Source2:	http://releases.mozilla.org/pub/mozilla.org/%{name}/releases/%{version}/linux-i686/xpi/pl.xpi
-# Source2-md5:	3d0276235380404a5a0cec4b8c8bfc52
+# Source0-md5:	91ce51cc6474f1269484e5327643a59c
+Source1:	ftp://ftp.mozilla.org/pub/firefox/releases/26.0/linux-i686/xpi/de.xpi
+# Source1-md5:	d659f1c611f5c94311f9f91e1767673f
+Source2:	ftp://ftp.mozilla.org/pub/firefox/releases/26.0/linux-i686/xpi/pl.xpi
+# Source2-md5:	07aa1d3b1e9a3959762ee326ac0c17bc
 Source100:	vendor.js
 Patch0:		%{name}-install-dir.patch
 Patch1:		%{name}-virtualenv.patch
@@ -20,7 +20,6 @@ BuildRequires:	bzip2-devel
 BuildRequires:	cairo-devel
 BuildRequires:	gtk+-devel
 BuildRequires:	hunspell-devel
-BuildRequires:	libIDL-devel
 BuildRequires:	libevent-devel
 BuildRequires:	libffi-devel
 BuildRequires:	libjpeg-devel
