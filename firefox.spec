@@ -1,15 +1,15 @@
 Summary:	Web browser
 Name:		firefox
-Version:	26.0
-Release:	2
+Version:	27.0
+Release:	1
 License:	MPL v1.1 or GPL v2+ or LGPL v2.1+
 Group:		X11/Applications
 Source0:	ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/source/firefox-%{version}.source.tar.bz2
-# Source0-md5:	91ce51cc6474f1269484e5327643a59c
-Source1:	ftp://ftp.mozilla.org/pub/firefox/releases/26.0/linux-i686/xpi/de.xpi
-# Source1-md5:	d659f1c611f5c94311f9f91e1767673f
-Source2:	ftp://ftp.mozilla.org/pub/firefox/releases/26.0/linux-i686/xpi/pl.xpi
-# Source2-md5:	07aa1d3b1e9a3959762ee326ac0c17bc
+# Source0-md5:	212827908144b43e7c80ed9d56a08ca9
+Source1:	ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/linux-i686/xpi/de.xpi
+# Source1-md5:	81877abd6d49762a9fbd481ac8a86c65
+Source2:	ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/linux-i686/xpi/pl.xpi
+# Source2-md5:	ee00d7347ba470625b0bf8b83039a6e7
 Source100:	vendor.js
 Patch0:		%{name}-install-dir.patch
 Patch1:		%{name}-virtualenv.patch
@@ -27,8 +27,8 @@ BuildRequires:	libnotify-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libvpx-devel
-BuildRequires:	nspr-devel >= 1:4.10
-BuildRequires:	nss-devel >= 1:3.15.1
+BuildRequires:	nspr-devel >= 1:4.10.3
+BuildRequires:	nss-devel >= 1:3.15.4
 BuildRequires:	pango-devel
 BuildRequires:	perl-modules
 BuildRequires:	pkg-config
