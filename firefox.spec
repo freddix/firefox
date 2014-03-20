@@ -1,15 +1,15 @@
 Summary:	Web browser
 Name:		firefox
-Version:	27.0.1
+Version:	28.0
 Release:	1
 License:	MPL v1.1 or GPL v2+ or LGPL v2.1+
 Group:		X11/Applications
 Source0:	ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/source/firefox-%{version}.source.tar.bz2
-# Source0-md5:	c8feb2c55294aa679e8755ac24844933
+# Source0-md5:	db06b6da6b826cfc6a49c15bca115a6b
 Source1:	ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/linux-i686/xpi/de.xpi
-# Source1-md5:	4c30ae71f5f7d792e38ba7e092749423
+# Source1-md5:	da24e393fce06f5c6d7dfeea2194c83a
 Source2:	ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/linux-i686/xpi/pl.xpi
-# Source2-md5:	2be58917e2d6bbc10290a7670f2b2e6e
+# Source2-md5:	4b3ec36bdad0242d4992f047ff16810c
 Source100:	vendor.js
 Patch0:		%{name}-install-dir.patch
 Patch1:		%{name}-virtualenv.patch
