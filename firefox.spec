@@ -1,55 +1,64 @@
 Summary:	Web browser
 Name:		firefox
-Version:	28.0
-Release:	1
+Version:	29.0
+Release:	2
 License:	MPL v1.1 or GPL v2+ or LGPL v2.1+
 Group:		X11/Applications
 Source0:	ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/source/firefox-%{version}.source.tar.bz2
-# Source0-md5:	db06b6da6b826cfc6a49c15bca115a6b
+# Source0-md5:	07c515fc487824f107a947d23f420e9d
 Source1:	ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/linux-i686/xpi/de.xpi
-# Source1-md5:	da24e393fce06f5c6d7dfeea2194c83a
+# Source1-md5:	38809e5e0017a180d57c736ded88cccc
 Source2:	ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/linux-i686/xpi/pl.xpi
-# Source2-md5:	4b3ec36bdad0242d4992f047ff16810c
+# Source2-md5:	932cdff519e4dd7756fead54717eb095
 Source100:	vendor.js
 Patch0:		%{name}-install-dir.patch
-Patch1:		%{name}-virtualenv.patch
+Patch1:		%{name}-hunspell.patch
+Patch2:		%{name}-virtualenv.patch
 URL:		http://www.mozilla.org/projects/firefox/
 BuildRequires:	OpenGL-devel
 BuildRequires:	automake
 BuildRequires:	bzip2-devel
-BuildRequires:	cairo-devel
+BuildRequires:	cairo-devel >= 1.10.2-2
+BuildRequires:	gstreamer010-plugins-base-devel
 BuildRequires:	gtk+-devel
 BuildRequires:	hunspell-devel
+BuildRequires:	icu-devel
 BuildRequires:	libevent-devel
 BuildRequires:	libffi-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libnotify-devel
-BuildRequires:	libpng-devel
+BuildRequires:	libpng-devel >= 2:1.6.8
 BuildRequires:	libstdc++-devel
 BuildRequires:	libvpx-devel
-BuildRequires:	nspr-devel >= 1:4.10.3
-BuildRequires:	nss-devel >= 1:3.15.4
+BuildRequires:	nspr-devel >= 1:4.10.4
+BuildRequires:	nss-devel >= 1:3.16
 BuildRequires:	pango-devel
 BuildRequires:	perl-modules
 BuildRequires:	pkg-config
+BuildRequires:	python-devel-src
 BuildRequires:	sed
-BuildRequires:	sqlite3-devel >= 3.7.15.2
+BuildRequires:	sqlite3-devel >= 3.8.2
 BuildRequires:	startup-notification-devel
 BuildRequires:	xorg-libXcursor-devel
 BuildRequires:	xorg-libXft-devel
 BuildRequires:	zip
 BuildRequires:	zlib-devel
-BuildRequires:  xulrunner-devel >= %{version}
 Requires(post,postun):	/usr/bin/gtk-update-icon-cache
 Requires(post,postun):	desktop-file-utils
 Requires(post,postun):	hicolor-icon-theme
+Requires:	nspr >= 1:4.10.4
+Requires:	nss >= 1:3.16
 # for audio and video playback
 Suggests:	gstreamer010-ffmpeg
 Suggests:	gstreamer010-plugins-bad
 Suggests:	gstreamer010-plugins-base
 Suggests:	gstreamer010-plugins-good
 Suggests:	gstreamer010-plugins-ugly
+Obsoletes:	xulrunner
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+# bug680547
+%define		specflags	-mno-avx
 
 %description
 Web browser.
@@ -60,6 +69,15 @@ Web browser.
 cd mozilla-release
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
+
+# use system headers
+%{__rm} extensions/spellcheck/hunspell/src/*.hxx
+echo 'LOCAL_INCLUDES += $(MOZ_HUNSPELL_CFLAGS)' >> extensions/spellcheck/src/Makefile.in
+
+# find ../../dist/sdk -name "*.pyc" | xargs rm
+# rm: missing operand
+%{__sed} -i "s|xargs rm|xargs rm -f|g" toolkit/mozapps/installer/packager.mk
 
 %build
 cd mozilla-release
@@ -85,11 +103,7 @@ ac_add_options --disable-tests
 ac_add_options --disable-updater
 #
 ac_add_options --enable-safe-browsing
-#
-ac_add_options --disable-debug
-ac_add_options --disable-pedantic
-ac_add_options --disable-strip
-ac_add_options --disable-strip-install
+ac_add_options --enable-url-classifier
 #
 ac_add_options --enable-optimize
 #
@@ -99,14 +113,15 @@ ac_add_options --enable-gio
 ac_add_options --enable-gstreamer
 ac_add_options --enable-startup-notification
 #
-ac_add_options --enable-system-cairo
+#ac_add_options --enable-system-cairo
+ac_add_options --enable-system-ffi
 ac_add_options --enable-system-hunspell
 ac_add_options --enable-system-lcms
-ac_add_options --enable-system-sqlite
-ac_add_options --enable-system-ffi
 ac_add_options --enable-system-pixman
+ac_add_options --enable-system-sqlite
 ac_add_options --with-pthreads
 ac_add_options --with-system-bz2
+ac_add_options --with-system-icu
 ac_add_options --with-system-jpeg
 ac_add_options --with-system-libevent
 ac_add_options --with-system-libvpx
@@ -114,20 +129,21 @@ ac_add_options --with-system-nspr
 ac_add_options --with-system-nss
 ac_add_options --with-system-png
 ac_add_options --with-system-zlib
-ac_add_options --with-libxul-sdk=$(pkg-config --variable=sdkdir libxul)
 #
 ac_add_options --enable-official-branding
 #
 export BUILD_OFFICIAL=1
 export MOZILLA_OFFICIAL=1
+export MOZ_UA_BUILDID=20100101
 mk_add_options BUILD_OFFICIAL=1
 mk_add_options MOZILLA_OFFICIAL=1
 
 EOF
 
-export CFLAGS="%{rpmcflags}"
-export CXXFLAGS="%{rpmcflags}"
-export LDFLAGS="%{rpmldflags}"
+# generate smaller debug files
+export CFLAGS="%(echo %{rpmcflags} | sed 's/ -g2/ -g1/g')"
+export CXXFLAGS="%(echo %{rpmcxxflags} | sed 's/ -g2/ -g1/g')"
+export LDFLAGS="%{rpmldflags} -Wl,-rpath,%{_libdir}/firefox"
 
 # i686 build broken:
 #
@@ -147,6 +163,24 @@ export LDFLAGS="%{rpmldflags}"
 # workaround:
 export TERM=xterm
 
+# Traceback (most recent call last):
+#  File "/usr/lib/python2.7/runpy.py", line 162, in _run_module_as_main
+#    "__main__", fname, loader, pkg_name)
+#  File "/usr/lib/python2.7/runpy.py", line 72, in _run_code
+#    exec code in run_globals
+#  File "/home/users/builder/rpm/BUILD/xulrunner-29.0/mozilla-release/python/mozbuild/mozbuild/action/webidl.py", line 7, in <module>
+#    from mozwebidlcodegen import BuildSystemWebIDL
+#  File "/home/users/builder/rpm/BUILD/xulrunner-29.0/mozilla-release/dom/bindings/mozwebidlcodegen/__init__.py", line 20, in <module>
+#    from mozbuild.base import MozbuildObject
+#  File "/home/users/builder/rpm/BUILD/xulrunner-29.0/mozilla-release/python/mozbuild/mozbuild/base.py", line 17, in <module>
+#    from mach.mixin.process import ProcessExecutionMixin
+#  File "/home/users/builder/rpm/BUILD/xulrunner-29.0/mozilla-release/python/mach/mach/mixin/process.py", line 29, in <module>
+#    raise Exception('Could not detect environment shell!')
+# Exception: Could not detect environment shell!
+# Makefile:72: recipe for target 'codegen.pp' failed
+# make[5]: *** [codegen.pp] Error 1
+export SHELL=/usr/bin/sh
+
 %{__make} -f client.mk configure
 %{__make} -f client.mk build		\
 	CC="%{__cc}"			\
@@ -165,6 +199,7 @@ install -D %{SOURCE100} $RPM_BUILD_ROOT%{_libdir}/firefox/browser/defaults/prefe
 
 %{__make} -j1 -f client.mk install	\
 	DESTDIR=$RPM_BUILD_ROOT		\
+	INSTALL_SDK=			\
 	MOZ_PKG_FATAL_WARNINGS=0	\
 	STRIP="/bin/true"
 
@@ -173,7 +208,6 @@ cp -p %{SOURCE2} $RPM_BUILD_ROOT%{_libdir}/%{name}/browser/extensions/langpack-p
 
 ln -s %{_datadir}/myspell $RPM_BUILD_ROOT%{_libdir}/%{name}/dictionaries
 ln -s %{_libdir}/browser-plugins $RPM_BUILD_ROOT%{_libdir}/%{name}/plugins
-ln -s ../xulrunner $RPM_BUILD_ROOT%{_libdir}/%{name}/xulrunner
 
 for i in 16 22 24 32 48 256; do
     install -d $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/${i}x${i}/apps
@@ -201,6 +235,9 @@ cat > $RPM_BUILD_ROOT%{_bindir}/firefox <<EOF
 exec %{_libdir}/firefox/firefox "\$@"
 EOF
 
+rm -rf $RPM_BUILD_ROOT%{_libdir}/%{name}/dictionaries
+ln -s %{_datadir}/myspell $RPM_BUILD_ROOT%{_libdir}/%{name}/dictionaries
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -220,11 +257,20 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/firefox/webapprt-stub
 
 %dir %{_libdir}/firefox
-%dir %{_libdir}/firefox/browser
+%attr(755,root,root) %{_libdir}/firefox/libmozalloc.so
+%attr(755,root,root) %{_libdir}/firefox/libxul.so
+%attr(755,root,root) %{_libdir}/firefox/mozilla-xremote-client
+%attr(755,root,root) %{_libdir}/firefox/plugin-container
 
+%dir %{_libdir}/firefox/browser
 %dir %{_libdir}/firefox/browser/components
 %attr(755,root,root) %{_libdir}/firefox/browser/components/libbrowsercomps.so
 %{_libdir}/firefox/browser/components/components.manifest
+
+%dir %{_libdir}/firefox/components
+%attr(755,root,root) %{_libdir}/firefox/components/libdbusservice.so
+%attr(755,root,root) %{_libdir}/firefox/components/libmozgnome.so
+%{_libdir}/firefox/components/components.manifest
 
 %dir %{_libdir}/firefox/browser/extensions
 %lang(de) %{_libdir}/firefox/browser/extensions/langpack-de@firefox.mozilla.org.xpi
@@ -239,15 +285,19 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/firefox/plugins
 %{_libdir}/firefox/dictionaries
 %{_libdir}/firefox/webapprt
-%{_libdir}/firefox/xulrunner
 
 # misc files
+%dir %{_libdir}/firefox/defaults/pref
+%{_libdir}/firefox/defaults/pref/channel-prefs.js
+%{_libdir}/firefox/application.ini
 %{_libdir}/firefox/browser/blocklist.xml
 %{_libdir}/firefox/browser/chrome.manifest
 %{_libdir}/firefox/browser/omni.ja
-%{_libdir}/firefox/application.ini
+%{_libdir}/firefox/chrome.manifest
+%{_libdir}/firefox/dependentlibs.list
+%{_libdir}/firefox/omni.ja
+%{_libdir}/firefox/platform.ini
 %{_libdir}/firefox/removed-files
-
 
 %{_desktopdir}/firefox.desktop
 %{_iconsdir}/hicolor/*/apps/*.png
