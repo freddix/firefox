@@ -1,15 +1,15 @@
 Summary:	Web browser
 Name:		firefox
-Version:	29.0
-Release:	2
+Version:	29.0.1
+Release:	1
 License:	MPL v1.1 or GPL v2+ or LGPL v2.1+
 Group:		X11/Applications
 Source0:	ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/source/firefox-%{version}.source.tar.bz2
-# Source0-md5:	07c515fc487824f107a947d23f420e9d
+# Source0-md5:	ca37addc3a69ef30247e00375dd93cd0
 Source1:	ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/linux-i686/xpi/de.xpi
-# Source1-md5:	38809e5e0017a180d57c736ded88cccc
+# Source1-md5:	acc96484100af138cf1b6a0b06b68ac0
 Source2:	ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/linux-i686/xpi/pl.xpi
-# Source2-md5:	932cdff519e4dd7756fead54717eb095
+# Source2-md5:	e91cd800528e3e9b9628c03affb646da
 Source100:	vendor.js
 Patch0:		%{name}-install-dir.patch
 Patch1:		%{name}-hunspell.patch
@@ -41,6 +41,7 @@ BuildRequires:	sqlite3-devel >= 3.8.2
 BuildRequires:	startup-notification-devel
 BuildRequires:	xorg-libXcursor-devel
 BuildRequires:	xorg-libXft-devel
+BuildRequires:	xorg-xserver-Xvfb
 BuildRequires:	zip
 BuildRequires:	zlib-devel
 Requires(post,postun):	/usr/bin/gtk-update-icon-cache
@@ -87,6 +88,7 @@ cat << 'EOF' > .mozconfig
 . $topsrcdir/browser/config/mozconfig
 
 mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj-%{_target_cpu}
+mk_add_options PROFILE_GEN_SCRIPT='$(PYTHON) $(MOZ_OBJDIR)/_profile/pgo/profileserver.py 10'
 #
 ac_add_options --host=%{_host}
 ac_add_options --build=%{_host}
@@ -181,8 +183,13 @@ export TERM=xterm
 # make[5]: *** [codegen.pp] Error 1
 export SHELL=/usr/bin/sh
 
+export MOZ_PGO=1
 %{__make} -f client.mk configure
-%{__make} -f client.mk build		\
+
+export DISPLAY=:99
+Xvfb -nolisten tcp -extension GLX -screen 0 1280x1024x24 $DISPLAY &
+
+%{__make} -f client.mk \
 	CC="%{__cc}"			\
 	CXX="%{__cxx}"			\
 	MOZ_MAKE_FLAGS=%{?_smp_mflags}	\
