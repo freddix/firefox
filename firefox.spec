@@ -1,15 +1,15 @@
 Summary:	Web browser
 Name:		firefox
-Version:	29.0.1
+Version:	30.0
 Release:	1
 License:	MPL v1.1 or GPL v2+ or LGPL v2.1+
 Group:		X11/Applications
 Source0:	ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/source/firefox-%{version}.source.tar.bz2
-# Source0-md5:	ca37addc3a69ef30247e00375dd93cd0
+# Source0-md5:	ac7e8c801ded4e6195182bf54c81acb6
 Source1:	ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/linux-i686/xpi/de.xpi
-# Source1-md5:	acc96484100af138cf1b6a0b06b68ac0
+# Source1-md5:	8b874d452c6b6c401c5218dd86002732
 Source2:	ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/linux-i686/xpi/pl.xpi
-# Source2-md5:	e91cd800528e3e9b9628c03affb646da
+# Source2-md5:	1cb4fdcf916e1bbf006e86c94f7a9a04
 Source100:	vendor.js
 Patch0:		%{name}-install-dir.patch
 Patch1:		%{name}-hunspell.patch
@@ -19,7 +19,7 @@ BuildRequires:	OpenGL-devel
 BuildRequires:	automake
 BuildRequires:	bzip2-devel
 BuildRequires:	cairo-devel >= 1.10.2-2
-BuildRequires:	gstreamer010-plugins-base-devel
+BuildRequires:	gstreamer-plugins-base-devel
 BuildRequires:	gtk+-devel
 BuildRequires:	hunspell-devel
 BuildRequires:	icu-devel
@@ -30,8 +30,8 @@ BuildRequires:	libnotify-devel
 BuildRequires:	libpng-devel >= 2:1.6.8
 BuildRequires:	libstdc++-devel
 BuildRequires:	libvpx-devel
-BuildRequires:	nspr-devel >= 1:4.10.4
-BuildRequires:	nss-devel >= 1:3.16
+BuildRequires:	nspr-devel >= 1:4.10.6
+BuildRequires:	nss-devel >= 1:3.16.1
 BuildRequires:	pango-devel
 BuildRequires:	perl-modules
 BuildRequires:	pkg-config
@@ -41,20 +41,20 @@ BuildRequires:	sqlite3-devel >= 3.8.2
 BuildRequires:	startup-notification-devel
 BuildRequires:	xorg-libXcursor-devel
 BuildRequires:	xorg-libXft-devel
-BuildRequires:	xorg-xserver-Xvfb
+#BuildRequires:	xorg-xserver-Xvfb
 BuildRequires:	zip
 BuildRequires:	zlib-devel
 Requires(post,postun):	/usr/bin/gtk-update-icon-cache
 Requires(post,postun):	desktop-file-utils
 Requires(post,postun):	hicolor-icon-theme
-Requires:	nspr >= 1:4.10.4
-Requires:	nss >= 1:3.16
+Requires:	nspr >= 1:4.10.6
+Requires:	nss >= 1:3.16.1
 # for audio and video playback
-Suggests:	gstreamer010-ffmpeg
-Suggests:	gstreamer010-plugins-bad
-Suggests:	gstreamer010-plugins-base
-Suggests:	gstreamer010-plugins-good
-Suggests:	gstreamer010-plugins-ugly
+Suggests:	gstreamer-libav
+Suggests:	gstreamer-plugins-bad
+Suggests:	gstreamer-plugins-base
+Suggests:	gstreamer-plugins-good
+Suggests:	gstreamer-plugins-ugly
 Obsoletes:	xulrunner
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -88,7 +88,7 @@ cat << 'EOF' > .mozconfig
 . $topsrcdir/browser/config/mozconfig
 
 mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj-%{_target_cpu}
-mk_add_options PROFILE_GEN_SCRIPT='$(PYTHON) $(MOZ_OBJDIR)/_profile/pgo/profileserver.py 10'
+#mk_add_options PROFILE_GEN_SCRIPT='$(PYTHON) $(MOZ_OBJDIR)/_profile/pgo/profileserver.py 10'
 #
 ac_add_options --host=%{_host}
 ac_add_options --build=%{_host}
@@ -112,7 +112,7 @@ ac_add_options --enable-optimize
 ac_add_options --disable-gnomeui
 ac_add_options --disable-gnomevfs
 ac_add_options --enable-gio
-ac_add_options --enable-gstreamer
+ac_add_options --enable-gstreamer=1.0
 ac_add_options --enable-startup-notification
 #
 #ac_add_options --enable-system-cairo
@@ -183,12 +183,14 @@ export TERM=xterm
 # make[5]: *** [codegen.pp] Error 1
 export SHELL=/usr/bin/sh
 
-export MOZ_PGO=1
-%{__make} -f client.mk configure
 
+%if 0
+export MOZ_PGO=1
 export DISPLAY=:99
 Xvfb -nolisten tcp -extension GLX -screen 0 1280x1024x24 $DISPLAY &
+%endif
 
+%{__make} -f client.mk configure
 %{__make} -f client.mk \
 	CC="%{__cc}"			\
 	CXX="%{__cxx}"			\
@@ -219,7 +221,7 @@ ln -s %{_libdir}/browser-plugins $RPM_BUILD_ROOT%{_libdir}/%{name}/plugins
 for i in 16 22 24 32 48 256; do
     install -d $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/${i}x${i}/apps
     cp browser/branding/official/default${i}.png \
-    	$RPM_BUILD_ROOT%{_datadir}/icons/hicolor/${i}x${i}/apps/firefox.png
+	$RPM_BUILD_ROOT%{_datadir}/icons/hicolor/${i}x${i}/apps/firefox.png
 done
 
 cat > $RPM_BUILD_ROOT%{_desktopdir}/%{name}.desktop <<EOF
