@@ -1,19 +1,18 @@
 Summary:	Web browser
 Name:		firefox
-Version:	30.0
+Version:	34.0.5
 Release:	1
 License:	MPL v1.1 or GPL v2+ or LGPL v2.1+
 Group:		X11/Applications
 Source0:	ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/source/firefox-%{version}.source.tar.bz2
-# Source0-md5:	ac7e8c801ded4e6195182bf54c81acb6
+# Source0-md5:	d9b7e4819899e23466f5b0750408f128
 Source1:	ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/linux-i686/xpi/de.xpi
-# Source1-md5:	8b874d452c6b6c401c5218dd86002732
+# Source1-md5:	89090bbcab8bd98e5aab29c38ee19fec
 Source2:	ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/linux-i686/xpi/pl.xpi
-# Source2-md5:	1cb4fdcf916e1bbf006e86c94f7a9a04
+# Source2-md5:	0afb28541359a00b1a7c632332475903
 Source100:	vendor.js
 Patch0:		%{name}-install-dir.patch
-Patch1:		%{name}-hunspell.patch
-Patch2:		%{name}-virtualenv.patch
+Patch1:		%{name}-virtualenv.patch
 URL:		http://www.mozilla.org/projects/firefox/
 BuildRequires:	OpenGL-devel
 BuildRequires:	automake
@@ -30,8 +29,8 @@ BuildRequires:	libnotify-devel
 BuildRequires:	libpng-devel >= 2:1.6.8
 BuildRequires:	libstdc++-devel
 BuildRequires:	libvpx-devel
-BuildRequires:	nspr-devel >= 1:4.10.6
-BuildRequires:	nss-devel >= 1:3.16.1
+BuildRequires:	nspr-devel >= 1:4.10.7
+BuildRequires:	nss-devel >= 1:3.17.2
 BuildRequires:	pango-devel
 BuildRequires:	perl-modules
 BuildRequires:	pkg-config
@@ -41,14 +40,14 @@ BuildRequires:	sqlite3-devel >= 3.8.2
 BuildRequires:	startup-notification-devel
 BuildRequires:	xorg-libXcursor-devel
 BuildRequires:	xorg-libXft-devel
-#BuildRequires:	xorg-xserver-Xvfb
+BuildRequires:	xorg-xserver-Xvfb
 BuildRequires:	zip
 BuildRequires:	zlib-devel
 Requires(post,postun):	/usr/bin/gtk-update-icon-cache
 Requires(post,postun):	desktop-file-utils
 Requires(post,postun):	hicolor-icon-theme
-Requires:	nspr >= 1:4.10.6
-Requires:	nss >= 1:3.16.1
+Requires:	nspr >= 1:4.10.7
+Requires:	nss >= 1:3.17.2
 # for audio and video playback
 Suggests:	gstreamer-libav
 Suggests:	gstreamer-plugins-bad
@@ -70,11 +69,6 @@ Web browser.
 cd mozilla-release
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
-
-# use system headers
-%{__rm} extensions/spellcheck/hunspell/src/*.hxx
-echo 'LOCAL_INCLUDES += $(MOZ_HUNSPELL_CFLAGS)' >> extensions/spellcheck/src/Makefile.in
 
 # find ../../dist/sdk -name "*.pyc" | xargs rm
 # rm: missing operand
@@ -88,7 +82,6 @@ cat << 'EOF' > .mozconfig
 . $topsrcdir/browser/config/mozconfig
 
 mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/obj-%{_target_cpu}
-#mk_add_options PROFILE_GEN_SCRIPT='$(PYTHON) $(MOZ_OBJDIR)/_profile/pgo/profileserver.py 10'
 #
 ac_add_options --host=%{_host}
 ac_add_options --build=%{_host}
@@ -99,19 +92,10 @@ ac_add_options --prefix=%{_prefix}
 ac_add_options --disable-crashreporter
 ac_add_options --disable-installer
 ac_add_options --disable-javaxpcom
-ac_add_options --disable-logging
-ac_add_options --disable-mochitest
-ac_add_options --disable-tests
 ac_add_options --disable-updater
-#
-ac_add_options --enable-safe-browsing
-ac_add_options --enable-url-classifier
 #
 ac_add_options --enable-optimize
 #
-ac_add_options --disable-gnomeui
-ac_add_options --disable-gnomevfs
-ac_add_options --enable-gio
 ac_add_options --enable-gstreamer=1.0
 ac_add_options --enable-startup-notification
 #
@@ -183,18 +167,14 @@ export TERM=xterm
 # make[5]: *** [codegen.pp] Error 1
 export SHELL=/usr/bin/sh
 
-
-%if 0
-export MOZ_PGO=1
-export DISPLAY=:99
-Xvfb -nolisten tcp -extension GLX -screen 0 1280x1024x24 $DISPLAY &
-%endif
-
 %{__make} -f client.mk configure
+
+xvfb-run -a -s "-extension GLX -screen 0 1280x1024x24" \
 %{__make} -f client.mk \
 	CC="%{__cc}"			\
 	CXX="%{__cxx}"			\
 	MOZ_MAKE_FLAGS=%{?_smp_mflags}	\
+	MOZ_PGO=1			\
 	STRIP="/bin/true"
 
 %install
@@ -206,10 +186,12 @@ cd mozilla-release
 
 install -D %{SOURCE100} $RPM_BUILD_ROOT%{_libdir}/firefox/browser/defaults/preferences/vendor.js
 
-%{__make} -j1 -f client.mk install	\
-	DESTDIR=$RPM_BUILD_ROOT		\
-	INSTALL_SDK=			\
-	MOZ_PKG_FATAL_WARNINGS=0	\
+export TERM=xterm
+export SHELL=/usr/bin/sh
+%{__make} -j1 -f client.mk install  \
+	DESTDIR=$RPM_BUILD_ROOT	    \
+	INSTALL_SDK=		    \
+	MOZ_PKG_FATAL_WARNINGS=0    \
 	STRIP="/bin/true"
 
 cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_libdir}/%{name}/browser/extensions/langpack-de@firefox.mozilla.org.xpi
@@ -267,6 +249,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %dir %{_libdir}/firefox
 %attr(755,root,root) %{_libdir}/firefox/libmozalloc.so
+%attr(755,root,root) %{_libdir}/firefox/libmozsandbox.so
 %attr(755,root,root) %{_libdir}/firefox/libxul.so
 %attr(755,root,root) %{_libdir}/firefox/mozilla-xremote-client
 %attr(755,root,root) %{_libdir}/firefox/plugin-container
