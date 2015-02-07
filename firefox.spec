@@ -1,20 +1,20 @@
 Summary:	Web browser
 Name:		firefox
-Version:	34.0.5
+Version:	35.0.1
 Release:	1
 License:	MPL v1.1 or GPL v2+ or LGPL v2.1+
 Group:		X11/Applications
 Source0:	ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/source/firefox-%{version}.source.tar.bz2
-# Source0-md5:	d9b7e4819899e23466f5b0750408f128
+# Source0-md5:	82eda528e4570b181aadcee602afda2d
 Source1:	ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/linux-i686/xpi/de.xpi
-# Source1-md5:	89090bbcab8bd98e5aab29c38ee19fec
+# Source1-md5:	cfce2e1953324250a56393a31cb23623
 Source2:	ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/linux-i686/xpi/pl.xpi
-# Source2-md5:	0afb28541359a00b1a7c632332475903
+# Source2-md5:	dbb77ff1c009b376c930e704fc5d1544
 Source100:	vendor.js
 Patch0:		%{name}-install-dir.patch
 Patch1:		%{name}-virtualenv.patch
 URL:		http://www.mozilla.org/projects/firefox/
-BuildRequires:	OpenGL-devel
+BuildRequires:	Mesa-libGL-devel
 BuildRequires:	automake
 BuildRequires:	bzip2-devel
 BuildRequires:	cairo-devel >= 1.10.2-2
@@ -30,10 +30,11 @@ BuildRequires:	libpng-devel >= 2:1.6.8
 BuildRequires:	libstdc++-devel
 BuildRequires:	libvpx-devel
 BuildRequires:	nspr-devel >= 1:4.10.7
-BuildRequires:	nss-devel >= 1:3.17.2
+BuildRequires:	nss-devel >= 1:3.17.3
 BuildRequires:	pango-devel
 BuildRequires:	perl-modules
 BuildRequires:	pkg-config
+BuildRequires:	pulseaudio-devel
 BuildRequires:	python-devel-src
 BuildRequires:	sed
 BuildRequires:	sqlite3-devel >= 3.8.2
@@ -47,7 +48,7 @@ Requires(post,postun):	/usr/bin/gtk-update-icon-cache
 Requires(post,postun):	desktop-file-utils
 Requires(post,postun):	hicolor-icon-theme
 Requires:	nspr >= 1:4.10.7
-Requires:	nss >= 1:3.17.2
+Requires:	nss >= 1:3.17.3
 # for audio and video playback
 Suggests:	gstreamer-libav
 Suggests:	gstreamer-plugins-bad
