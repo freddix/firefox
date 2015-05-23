@@ -5,7 +5,7 @@
                      'stat', 'UserDict', 'readline', 'copy_reg', 'types',
                      're', 'sre', 'sre_parse', 'sre_constants', 'sre_compile',
 -                    'zlib']
-+                    'bz2', 'zlib', 'time', 'cStringIO', 'md5', '_hashlib', '_struct',
++                    'bz2', 'zlib', 'time', 'cStringIO', 'md5', '_hashlib', '_struct', '_ctypes',
 +                    '_collections', 'operator', 'itertools', 'math', 'binascii', '_csv', '_ssl',
 +                    '_random', '_io', '_functools', 'array', '_socket', 'select', '_multiprocessing',
 +                    'fcntl', 'cPickle', 'datetime', 'syslog', '_sqlite3', 'unicodedata', 'parser', 'pyexpat']

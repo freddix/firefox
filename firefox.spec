@@ -1,15 +1,15 @@
 Summary:	Web browser
 Name:		firefox
-Version:	35.0.1
+Version:	38.0.1
 Release:	1
 License:	MPL v1.1 or GPL v2+ or LGPL v2.1+
 Group:		X11/Applications
 Source0:	ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/source/firefox-%{version}.source.tar.bz2
-# Source0-md5:	82eda528e4570b181aadcee602afda2d
+# Source0-md5:	3c496e4ec072327b1ef2b820f15dff26
 Source1:	ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/linux-i686/xpi/de.xpi
-# Source1-md5:	cfce2e1953324250a56393a31cb23623
+# Source1-md5:	e0445658e79b84a1b237ac2ff47711bd
 Source2:	ftp://ftp.mozilla.org/pub/firefox/releases/%{version}/linux-i686/xpi/pl.xpi
-# Source2-md5:	dbb77ff1c009b376c930e704fc5d1544
+# Source2-md5:	33bf54fb6711b4fb60fbce4bf71b7a48
 Source100:	vendor.js
 Patch0:		%{name}-install-dir.patch
 Patch1:		%{name}-virtualenv.patch
@@ -29,15 +29,15 @@ BuildRequires:	libnotify-devel
 BuildRequires:	libpng-devel >= 2:1.6.8
 BuildRequires:	libstdc++-devel
 BuildRequires:	libvpx-devel
-BuildRequires:	nspr-devel >= 1:4.10.7
-BuildRequires:	nss-devel >= 1:3.17.3
+BuildRequires:	nspr-devel >= 1:4.10.8
+BuildRequires:	nss-devel >= 1:3.18.1
 BuildRequires:	pango-devel
 BuildRequires:	perl-modules
 BuildRequires:	pkg-config
-BuildRequires:	pulseaudio-devel
+#BuildRequires:	pulseaudio-devel
 BuildRequires:	python-devel-src
 BuildRequires:	sed
-BuildRequires:	sqlite3-devel >= 3.8.2
+BuildRequires:	sqlite3-devel >= 3.8.10
 BuildRequires:	startup-notification-devel
 BuildRequires:	xorg-libXcursor-devel
 BuildRequires:	xorg-libXft-devel
@@ -47,8 +47,8 @@ BuildRequires:	zlib-devel
 Requires(post,postun):	/usr/bin/gtk-update-icon-cache
 Requires(post,postun):	desktop-file-utils
 Requires(post,postun):	hicolor-icon-theme
-Requires:	nspr >= 1:4.10.7
-Requires:	nss >= 1:3.17.3
+Requires:	nspr >= 1:4.10.8
+Requires:	nss >= 1:3.18.1
 # for audio and video playback
 Suggests:	gstreamer-libav
 Suggests:	gstreamer-plugins-bad
@@ -100,6 +100,7 @@ ac_add_options --enable-optimize
 ac_add_options --enable-gstreamer=1.0
 ac_add_options --enable-startup-notification
 #
+ac_add_options --disable-pulseaudio
 #ac_add_options --enable-system-cairo
 ac_add_options --enable-system-ffi
 ac_add_options --enable-system-hunspell
@@ -250,9 +251,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %dir %{_libdir}/firefox
 %attr(755,root,root) %{_libdir}/firefox/libmozalloc.so
-%attr(755,root,root) %{_libdir}/firefox/libmozsandbox.so
 %attr(755,root,root) %{_libdir}/firefox/libxul.so
-%attr(755,root,root) %{_libdir}/firefox/mozilla-xremote-client
 %attr(755,root,root) %{_libdir}/firefox/plugin-container
 
 %dir %{_libdir}/firefox/browser
@@ -264,6 +263,11 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/firefox/components/libdbusservice.so
 %attr(755,root,root) %{_libdir}/firefox/components/libmozgnome.so
 %{_libdir}/firefox/components/components.manifest
+
+%dir %{_libdir}/firefox/gmp-clearkey
+%dir %{_libdir}/firefox/gmp-clearkey/0.1
+%{_libdir}/firefox/gmp-clearkey/0.1/clearkey.info
+%attr(755,root,root) %{_libdir}/firefox/gmp-clearkey/0.1/libclearkey.so
 
 %dir %{_libdir}/firefox/browser/extensions
 %lang(de) %{_libdir}/firefox/browser/extensions/langpack-de@firefox.mozilla.org.xpi
